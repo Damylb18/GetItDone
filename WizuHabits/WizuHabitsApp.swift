@@ -9,6 +9,10 @@ import SwiftUI
 
 @main
 struct WizuHabitsApp: App {
+    init() {
+        NotificationService.shared.requestAuthorization()
+        NotificationService.shared.configure()
+    }
     var body: some Scene {
         WindowGroup {
             ContentView()

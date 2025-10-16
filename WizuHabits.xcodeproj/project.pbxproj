@@ -30,11 +30,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		041D14902E7CBFE800B1DCAF /* WizuHabits */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = WizuHabits;
-			sourceTree = "<group>";
-		};
 		041D149E2E7CBFEA00B1DCAF /* WizuHabitsTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = WizuHabitsTests;
@@ -43,6 +38,11 @@
 		041D14A82E7CBFEA00B1DCAF /* WizuHabitsUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = WizuHabitsUITests;
+			sourceTree = "<group>";
+		};
+		041D14D22E8610E800B1DCAF /* WizuHabits */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WizuHabits;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,10 +75,10 @@
 		041D14852E7CBFE800B1DCAF = {
 			isa = PBXGroup;
 			children = (
-				041D14902E7CBFE800B1DCAF /* WizuHabits */,
 				041D149E2E7CBFEA00B1DCAF /* WizuHabitsTests */,
 				041D14A82E7CBFEA00B1DCAF /* WizuHabitsUITests */,
 				041D148F2E7CBFE800B1DCAF /* Products */,
+				041D14D22E8610E800B1DCAF /* WizuHabits */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,7 +108,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				041D14902E7CBFE800B1DCAF /* WizuHabits */,
+				041D14D22E8610E800B1DCAF /* WizuHabits */,
 			);
 			name = WizuHabits;
 			packageProductDependencies = (
@@ -397,6 +397,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Get It Done";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -410,6 +411,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chidalunwizu.WizuHabits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -428,6 +433,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Get It Done";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -441,6 +447,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chidalunwizu.WizuHabits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
