@@ -20,30 +20,36 @@ struct UpcomingView: View {
     }
     
     var body: some View {
-            List {
-                if upcomingTasks.isEmpty {
-                    Text("No upcoming tasks ")
-                        .font(.headline)
-                        .foregroundColor(.gray)
-                        .padding()
-                } else {
-                    ForEach(groupedTasks.keys.sorted(), id: \.self) { date in
-                        Section(header: Text(sectionTitle(for: date))) {
-                            ForEach(groupedTasks[date] ?? []) { task in
-                                VStack(alignment: .leading) {
-                                    Text(task.name)
-                                        .font(.headline)
-                                    
-                                    Text("Start: \(task.startTime.formatted(date: .abbreviated, time: .shortened))")
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
+        VStack (spacing:0)
+        {
+            AppHeaderView(title: "What's coming up?")
+                List {
+                    if upcomingTasks.isEmpty {
+                        Text("No upcoming tasks ")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                            .padding()
+                    } else {
+                        ForEach(groupedTasks.keys.sorted(), id: \.self) { date in
+                            Section(header: Text(sectionTitle(for: date))) {
+                                ForEach(groupedTasks[date] ?? []) { task in
+                                    VStack(alignment: .leading) {
+                                        Text(task.name)
+                                            .font(.headline)
+                                        
+                                        Text("Start: \(task.startTime.formatted(date: .abbreviated, time: .shortened))")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
+                                    .padding(.vertical, 4)
                                 }
-                                .padding(.vertical, 4)
                             }
                         }
                     }
                 }
-            }
+        }
+        .ignoresSafeArea(edges: .top)
+        
         }
     
     // Group tasks by calendar day

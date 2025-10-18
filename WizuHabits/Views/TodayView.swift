@@ -24,18 +24,20 @@ struct TodayView: View {
 
     // MARK: - Body
     var body: some View {
+        
         VStack(spacing: 0) {
-            AppHeaderView(title: "Get It Done", subtitle: "Today's Tasks")
-
+            AppHeaderView(title: "Get It Done")
             ScrollView {
                 VStack(spacing: 24) {
                     inputSection
                     progressSection
                     taskList
                 }
-                .padding(.bottom, 30)
+               .padding(.top, 30)
+               .padding(.bottom, 30)
             }
         }
+        .ignoresSafeArea(edges: .top)
         .navigationBarHidden(true)
         .alert(isPresented: $showAlert) {
             Alert(

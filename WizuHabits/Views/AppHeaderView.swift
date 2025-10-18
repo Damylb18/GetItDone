@@ -1,47 +1,57 @@
-//
-//  AppHeaderView.swift
-//  WizuHabits
-//
-//  Created by DAMY on 17/10/2025.
-//
-
 import SwiftUI
 
 struct AppHeaderView: View {
     var title: String
-    var subtitle: String? = nil
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
+            // Background gradient
             LinearGradient(
                 colors: [.indigo, .purple],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-            .frame(height: 150)
             .ignoresSafeArea(edges: .top)
+            .frame(height: 200)
 
-            HStack(spacing: 20) {
+            // Content
+            VStack(spacing: 5) {
                 Image("AppLogo")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 60, height: 60)
-                    .cornerRadius(12)
-                    .shadow(radius: 4)
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.largeTitle.bold())
-                        .foregroundColor(.white)
-                }
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .shadow(color: .black.opacity(0.25), radius: 5, x: 0, y: 3)
 
-                Spacer()
+                Text(title.uppercased())
+                    .font(.system(size: 26, weight: .heavy, design: .rounded))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.white, .white.opacity(0.85)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 2)
+
+                Text("Stay focused. Get things done.")
+                    .font(.caption)
+                    .foregroundColor(.white.opacity(0.9))
             }
-            .padding(.horizontal)
+            .frame(maxWidth: .infinity)
+            .padding(.top, 55)
+
+            // Rounded white overlay at bottom edge
+            RoundedRectangle(cornerRadius: 32)
+                .fill(Color(.systemBackground))
+                .frame(height: 50)
+                .offset(y: 180) // Push down slightly for a clean overlap
         }
     }
 }
 
 #Preview {
     AppHeaderView(title: "Get It Done")
+        .previewLayout(.sizeThatFits)
+        .background(Color(.systemBackground))
 }
