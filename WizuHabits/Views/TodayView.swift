@@ -5,82 +5,38 @@ struct TodayView: View {
     @State private var newTask: String = ""
     @State private var startTime: Date = Date()
     @State private var deadline: Date = Date().addingTimeInterval(3600)
-
     @State private var showAlert = false
     @State private var alertMessage = ""
-
-    // Edit state
     @State private var selectedTask: HabitTask? = nil
 
-    // Progress for ONLY today's tasks
+    // MARK: - Computed Properties
+
+    private var todaysTasks: [HabitTask] {
+        Calendar.current.isDateInToday(Date())
+            ? store.tasks.filter { Calendar.current.isDate($0.startTime, inSameDayAs: Date()) }
+            : []
+    }
+
     private var progress: Double {
         guard !todaysTasks.isEmpty else { return 0 }
-        let completed = todaysTasks.filter { $0.isCompleted }.count
-        return Double(completed) / Double(todaysTasks.count)
+        return Double(todaysTasks.filter(\.isCompleted).count) / Double(todaysTasks.count)
     }
 
-    // Today’s tasks only
-    private var todaysTasks: [HabitTask] {
-        let calendar = Calendar.current
-        return store.tasks.filter { task in
-            calendar.isDate(task.startTime, inSameDayAs: Date())
-        }
-    }
-
+    // MARK: - Body
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
+        VStack(spacing: 0) {
+            AppHeaderView(title: "Get It Done", subtitle: "Today's Tasks")
 
-                // 🟦 Input section
-                VStack(spacing: 10) {
-                    TextField("Enter Task...", text: $newTask)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding(.horizontal)
-
-                    DatePicker("Start time", selection: $startTime, displayedComponents: [.date, .hourAndMinute])
-                        .padding(.horizontal)
-
-                    DatePicker("Deadline", selection: $deadline, displayedComponents: [.date, .hourAndMinute])
-                        .padding(.horizontal)
-
-                    Button("Add Task") {
-                        if validateTask() {
-                            let task = HabitTask(name: newTask, startTime: startTime, deadline: deadline)
-                            store.addTask(task)
-                            NotificationService.shared.scheduleStartReminder(for: task)
-                            NotificationService.shared.scheduleLazyNudge(for: task)
-                            resetInputs()
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(.indigo)
-                    .padding(.top, 4)
+            ScrollView {
+                VStack(spacing: 24) {
+                    inputSection
+                    progressSection
+                    taskList
                 }
-                .padding(.top, 10)
-
-                // 🟣 Progress bar
-                VStack(alignment: .leading) {
-                    Text("Today's Progress: \(Int(progress * 100))%")
-                        .font(.subheadline)
-                        .padding(.horizontal)
-
-                    ProgressView(value: progress)
-                        .progressViewStyle(.linear)
-                        .padding(.horizontal)
-                }
-
-                // 🟢 Task list
-                VStack(spacing: 10) {
-                    ForEach(todaysTasks) { task in
-                        taskRow(task)
-                    }
-                }
-                .padding(.horizontal)
+                .padding(.bottom, 30)
             }
-            .padding(.bottom, 30)
         }
-        .scrollDismissesKeyboard(.interactively)
-        .navigationTitle("Today")
+        .navigationBarHidden(true)
         .alert(isPresented: $showAlert) {
             Alert(
                 title: Text("Invalid Task"),
@@ -106,24 +62,74 @@ struct TodayView: View {
         }
     }
 
-    // MARK: - Reusable task row
+    // MARK: - Input Section
+    private var inputSection: some View {
+        VStack(spacing: 10) {
+            TextField("Enter Task...", text: $newTask)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.horizontal)
 
-    @ViewBuilder
+            DatePicker("Start time", selection: $startTime, displayedComponents: [.date, .hourAndMinute])
+                .padding(.horizontal)
+
+            DatePicker("Deadline", selection: $deadline, displayedComponents: [.date, .hourAndMinute])
+                .padding(.horizontal)
+
+            Button("Add Task") {
+                if validateTask() {
+                    let task = HabitTask(name: newTask, startTime: startTime, deadline: deadline)
+                    store.addTask(task)
+                    NotificationService.shared.scheduleStartReminder(for: task)
+                    NotificationService.shared.scheduleLazyNudge(for: task)
+                    resetInputs()
+                }
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.indigo)
+            .padding(.top, 4)
+        }
+        .padding(.top, 10)
+    }
+
+    // MARK: - Progress Section
+    private var progressSection: some View {
+        VStack(alignment: .leading) {
+            Text("Today's Progress: \(Int(progress * 100))%")
+                .font(.subheadline)
+                .padding(.horizontal)
+
+            ProgressView(value: progress)
+                .progressViewStyle(.linear)
+                .padding(.horizontal)
+        }
+    }
+
+    // MARK: - Task List
+    private var taskList: some View {
+        VStack(spacing: 0) {
+            ForEach(todaysTasks) { task in
+                taskRow(task)
+                Divider() // ⬅️ Separator between tasks
+                    .padding(.leading, 40)
+            }
+        }
+        .padding(.horizontal)
+    }
+
+    // MARK: - Task Row
     private func taskRow(_ task: HabitTask) -> some View {
-        HStack(alignment: .top) {
-            // Completion toggle
-            Button(action: {
+        HStack(alignment: .top, spacing: 12) {
+            Button {
                 store.toggleCompletion(for: task)
                 if task.isCompleted {
                     NotificationService.shared.cancelReminder(for: task.id)
                 }
-            }) {
+            } label: {
                 Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
                     .foregroundColor(task.isCompleted ? .green : .gray)
                     .font(.title3)
             }
 
-            // Task details
             VStack(alignment: .leading, spacing: 6) {
                 Text(task.name)
                     .font(.headline)
@@ -146,13 +152,11 @@ struct TodayView: View {
                 }
                 .foregroundColor(.primary)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
 
-            // Options menu (Edit / Delete)
+            Spacer()
+
             Menu {
-                Button("Edit", systemImage: "pencil") {
-                    selectedTask = task
-                }
+                Button("Edit", systemImage: "pencil") { selectedTask = task }
                 Button("Delete", systemImage: "trash", role: .destructive) {
                     deleteByID(task)
                 }
@@ -160,22 +164,18 @@ struct TodayView: View {
                 Image(systemName: "ellipsis.circle")
                     .font(.title2)
                     .foregroundColor(.gray)
-                    .padding(.leading, 6)
             }
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 8)
     }
 
-    // MARK: - Deletion helpers
-
+    // MARK: - Helpers
     private func deleteByID(_ task: HabitTask) {
         NotificationService.shared.cancelReminder(for: task.id)
         if let idx = store.tasks.firstIndex(where: { $0.id == task.id }) {
             store.deleteTask(at: IndexSet(integer: idx))
         }
     }
-
-    // MARK: - Validation & reset
 
     private func validateTask() -> Bool {
         let task = HabitTask(name: newTask, startTime: startTime, deadline: deadline)
@@ -196,5 +196,5 @@ struct TodayView: View {
 }
 
 #Preview {
-    ContentView()
+    TodayView()
 }
