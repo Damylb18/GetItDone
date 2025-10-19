@@ -1,0 +1,10 @@
+# Ignore Xcode user data and scheme files
+*.xcuserdata/
+*.xcuserstate
+WizuHabits.xcodeproj/xcshareddata/xcschemes/WizuHabits.xcscheme
+
+# Ignore environment/config files
+.env
+
+# macOS system files
+.DS_Store
